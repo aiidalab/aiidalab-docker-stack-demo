@@ -10,6 +10,7 @@ if [ ! -e /home/${SYSTEM_USER}/apps/quantum-espresso ]; then
   git clone https://github.com/aiidalab/aiidalab-qe.git /home/${SYSTEM_USER}/apps/quantum-espresso
   cd /home/${SYSTEM_USER}/apps/quantum-espresso
   git checkout develop
+  pip install .
   cd -
 fi
 
