@@ -1,0 +1,115 @@
+# Build the image and deploy it to the test environment.
+
+name: continuous-integration
+
+on:
+  [push]
+
+jobs:
+
+  build-docker-image:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    outputs:
+      tag: ${{ steps.setup.outputs.tag }}
+
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        name: Set image tag
+        id: setup
+        run: |
+          IMAGE_REF=`echo ${{ github.sha }} | sed 's/^\(.......\).*/\1/'`
+          TAG="sha-${IMAGE_REF}"
+          echo "::set-output name=tag::sha-${IMAGE_REF}"
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            ${{ github.repository }}:latest
+            ${{ github.repository }}:${{ steps.setup.outputs.tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy-demo-develop:
+
+    needs: [build-docker-image]
+    if: github.ref == 'refs/heads/develop'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: demo-develop
+      url: https://demo-develop.aiidalab.net
+    env:
+      RELEASE: aiidalab-demo-develop
+      contact_email: simon.adorf@epfl.ch
+      image_name: ${{ github.repository }}
+      image_tag: ${{ needs.build-docker-image.outputs.tag }}
+      jh_host: demo-develop.aiidalab.net
+      oauth_client_id: "ec9145436c332e45df0a"
+      oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
+      secret_token: ${{ secrets.SECRET_TOKEN }}
+
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      -
+        name: Install Python requirements
+        run: |
+          pip install \
+            j2cli[yaml] \
+            ruamel.yaml
+          pip freeze
+      -
+        name: Configure deployment
+        run: |
+          j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
+
+      -
+        name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+      -
+        name: Deploy with Helm
+        run: |
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+          helm repo update
+          touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          KUBECONFIG="kubeconfig" helm upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
