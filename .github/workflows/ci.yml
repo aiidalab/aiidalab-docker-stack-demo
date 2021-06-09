@@ -63,6 +63,7 @@ jobs:
   deploy-demo-develop:
 
     needs: [build-docker-image]
+    if: github.ref == 'refs/heads/develop'
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
