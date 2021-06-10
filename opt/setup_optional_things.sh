@@ -4,17 +4,6 @@ if [ ! -e /home/${SYSTEM_USER}/SKIP_IMPORT_PSEUDOS ]; then
    verdi data upf listfamilies | grep 'SSSP_1.1_precision' || verdi import -n /opt/pseudos/SSSP_precision_pseudos.aiida
 fi
 
-
-# Quantum Espresso app.
-if [ ! -e /home/${SYSTEM_USER}/apps/quantum-espresso ]; then
-  git clone https://github.com/aiidalab/aiidalab-qe.git /home/${SYSTEM_USER}/apps/quantum-espresso
-  cd /home/${SYSTEM_USER}/apps/quantum-espresso
-  git checkout develop
-  pip install .
-  cd -
-fi
-
-
 computer_name=localhost
 
 # Setup Quantum ESPRESSO pw.x code.
