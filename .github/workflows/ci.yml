@@ -80,6 +80,10 @@ jobs:
       oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
       secret_token: ${{ secrets.SECRET_TOKEN }}
 
+      # Apps to install by default:
+      awb_app_version: "develop"
+      qe_app_version: "develop"
+
     steps:
       -
         uses: actions/checkout@v2

@@ -1,4 +1,4 @@
-FROM aiidalab/aiidalab-docker-stack:sha-bb3aa9b
+FROM aiidalab/aiidalab-docker-stack:sha-1270ec1
 
 USER root
 
