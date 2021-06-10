@@ -41,8 +41,13 @@ hub:
       oauth_callback_url: "https://{{ jh_host }}/hub/oauth_callback"
       allowed_organizations:
         - aiidalab
+        - materialscloud-org
+      admin_users:
+        - csadorf
+        - yakutovicha
       scope:
         - read:user
+        - read:org
     JupyterHub:
       authenticator_class: github
   db:
