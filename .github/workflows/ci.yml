@@ -72,6 +72,7 @@ jobs:
       url: https://demo-develop.aiidalab.net
     env:
       RELEASE: aiidalab-demo-develop
+      aiidalab_factory_reset: "2"
       contact_email: simon.adorf@epfl.ch
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
