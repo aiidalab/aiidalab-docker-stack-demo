@@ -9,13 +9,6 @@ RUN conda install --yes -c conda-forge \
   cp2k=8.2.0 \
   && conda clean --all
 
-WORKDIR /opt/pseudos
-RUN base_url=http://legacy-archive.materialscloud.org/file/2018.0001/v3;  \
-wget ${base_url}/SSSP_efficiency_pseudos.aiida;                           \
-wget ${base_url}/SSSP_precision_pseudos.aiida;                            \
-chown -R root:root /opt/pseudos/;                                         \
-chmod -R +r /opt/pseudos/
-
 # Install Python packages needed for AiiDAlab and populate reentry cache for root (https://pypi.python.org/pypi/reentry/).
 COPY requirements.txt .
 RUN pip install --upgrade pip

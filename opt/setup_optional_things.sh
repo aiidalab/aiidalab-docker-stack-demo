@@ -1,7 +1,9 @@
 # Setup pseudopotentials.
 if [ ! -e /home/${SYSTEM_USER}/SKIP_IMPORT_PSEUDOS ]; then
-   verdi data upf listfamilies | grep 'SSSP_1.1_efficiency'|| verdi import -n /opt/pseudos/SSSP_efficiency_pseudos.aiida
-   verdi data upf listfamilies | grep 'SSSP_1.1_precision' || verdi import -n /opt/pseudos/SSSP_precision_pseudos.aiida
+  aiida-pseudo install sssp -x PBE -p efficiency
+  aiida-pseudo install sssp -x PBE -p precision
+  aiida-pseudo install sssp -x PBEsol -p efficiency
+  aiida-pseudo install sssp -x PBEsol -p precision
 fi
 
 computer_name=localhost
