@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  aiidalab:
+    build: .
+    ports:
+      - ${AIIDALAB_PORT}:8888
+    environment:
+      - >
+        AIIDALAB_DEFAULT_APPS=
+        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@develop
+        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@develop
+      - JUPYTER_TOKEN
+    volumes:
+      - ${AIIDALAB_HOME:-~/aiidalab}:/home/aiida
