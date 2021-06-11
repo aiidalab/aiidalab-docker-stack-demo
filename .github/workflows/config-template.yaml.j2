@@ -19,8 +19,10 @@ singleuser:
     NB_UID: "1000"
     NB_GID: "1000"
     AIIDALAB_FACTORY_RESET: "{{ aiidalab_factory_reset | default('')}}"
-    AWB_APP_VERSION: "{{ awb_app_version | default('') }}"
-    QE_APP_VERSION: "{{ qe_app_version | default('') }}"
+{%- if aiidalab_default_apps %}
+    AIIDALAB_DEFAULT_APPS: >-
+      {{ aiidalab_default_apps.split() | join('\n') | indent(6) }}
+{%- endif %}
   storage:
     homeMountPath: "/home/aiida"
     dynamic:
