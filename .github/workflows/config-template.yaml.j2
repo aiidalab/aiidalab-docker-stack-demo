@@ -1,7 +1,7 @@
 proxy:
     secretToken: "{{ secret_token }}"
     https:
-      enabled: true
+      enabled: {{ https_enabled | default(false) }}
       hosts:
         - "{{ jh_host }}"
       letsencrypt:
@@ -66,6 +66,15 @@ hub:
 
       # insert template path for custom login template
       c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
+
+scheduling:
+  userPods:
+    nodeAffinity:
+      # matchNodePurpose valid options:
+      # - ignore
+      # - prefer (the default)
+      # - require
+      matchNodePurpose: require
 
 # removing inactive pods (=no response from the user's browser).
 cull:
