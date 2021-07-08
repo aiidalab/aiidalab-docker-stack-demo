@@ -67,6 +67,11 @@ hub:
       # insert template path for custom login template
       c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
 
+      # Override default logo
+      import urllib.request
+      urllib.request.urlretrieve("https://github.com/aiidalab/ansible-role-aiidalab-server/raw/master/files/aiidalab_wide.png", "aiidalab-logo.png")
+      c.JupyterHub.logo_file = "aiidalab-logo.png"
+
 scheduling:
   userPods:
     nodeAffinity:
