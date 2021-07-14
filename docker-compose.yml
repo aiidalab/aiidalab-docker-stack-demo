@@ -11,4 +11,4 @@ services:
         quantum-espresso@https://github.com/aiidalab/aiidalab-qe@develop
       - JUPYTER_TOKEN
     volumes:
-      - ${AIIDALAB_HOME:-~/aiidalab}:/home/aiida
+      - ~/aiidalab:/home/aiida
