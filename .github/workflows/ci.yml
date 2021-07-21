@@ -141,8 +141,8 @@ jobs:
       NAMESPACE: staging
       RELEASE: aiidalab-demo-staging
       aiidalab_default_apps: >-
-        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@master
-        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@master
+        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@stable
+        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@stable
       aiidalab_factory_reset: ""
       contact_email: simon.adorf@epfl.ch
       https_enabled: true
