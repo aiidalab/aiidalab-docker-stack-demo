@@ -78,8 +78,8 @@ jobs:
       RELEASE: aiidalab-demo-develop
       aiidalab_default_apps: >-
         aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@develop
-        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@develop
       aiidalab_factory_reset: "2"
+        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@master
       contact_email: simon.adorf@epfl.ch
       https_enabled: true
       image_name: ${{ github.repository }}
