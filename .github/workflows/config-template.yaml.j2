@@ -31,27 +31,21 @@ singleuser:
     limit: 4G
     guarantee: 2G
   cpu:
-    limit: 2.0
-    guarantee: .5
+    limit: 4.0
+    guarantee: 2
   startTimeout: 600
 
 hub:
   config:
-    GitHubOAuthenticator:
-      client_id: "{{ oauth_client_id }}"
-      client_secret: "{{ oauth_client_secret }}"
-      oauth_callback_url: "https://{{ jh_host }}/hub/oauth_callback"
-      allowed_organizations:
-        - aiidalab
-        - materialscloud-org
+    Authenticator:
       admin_users:
         - csadorf
-        - yakutovicha
-      scope:
-        - read:user
-        - read:org
+      allowed_users:
+        - csadorf
+    FirstUseAuthenticator:
+      create_users: True
     JupyterHub:
-      authenticator_class: github
+      authenticator_class: firstuse
   db:
     pvc:
       storageClassName: gp2
