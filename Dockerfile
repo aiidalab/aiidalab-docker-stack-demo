@@ -17,6 +17,7 @@ RUN reentry scan
 
 # Prepare user's folders for AiiDAlab launch.
 COPY opt/setup_optional_things.sh /opt/
+COPY opt/fix_localhost_num_mpiprocs.py /opt/
 COPY my_init.d/setup_optional_things.sh /etc/my_init.d/90_setup_optional_things.sh
 
 CMD ["/sbin/my_my_init"]

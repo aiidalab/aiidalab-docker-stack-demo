@@ -6,6 +6,10 @@ if [ ! -e /home/${SYSTEM_USER}/SKIP_IMPORT_PSEUDOS ]; then
   aiida-pseudo install sssp -x PBEsol -p precision
 fi
 
+# Fix the default number of CPUs set for the localhost computer to perform
+# proper MPI scaling.
+/opt/conda/bin/python /opt/fix_localhost_num_mpiprocs.py
+
 computer_name=localhost
 
 # Setup Quantum ESPRESSO pw.x code.
