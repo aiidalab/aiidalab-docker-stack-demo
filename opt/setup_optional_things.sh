@@ -17,6 +17,7 @@ do
       --description "${code_name}.x AiiDAlab container."            \
       --input-plugin quantumespresso.${code_name}                   \
       --computer ${computer_name}                                   \
+      --prepend-text "export OMP_NUM_THREADS=1"                     \
       --remote-abs-path `which ${code_name}.x`
 done
 
