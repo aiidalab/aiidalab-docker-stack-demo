@@ -82,7 +82,7 @@ jobs:
         quantum-espresso@https://github.com/aiidalab/aiidalab-qe@v21.08.0b1
       aiidalab_factory_reset: ""
       contact_email: simon.adorf@epfl.ch
-      https_enabled: false
+      https_enabled: true
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
       jh_host: ccmx2021.aiidalab.net
