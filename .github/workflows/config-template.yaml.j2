@@ -42,10 +42,8 @@ hub:
         - csadorf
       allowed_users:
         - csadorf
-    FirstUseAuthenticator:
-      create_users: True
     JupyterHub:
-      authenticator_class: firstuse
+      authenticator_class: firstuseauthenticator.FirstUseAuthenticator
   db:
     pvc:
       storageClassName: gp2
