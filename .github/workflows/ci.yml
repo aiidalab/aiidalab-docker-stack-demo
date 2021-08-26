@@ -122,4 +122,4 @@ jobs:
           helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
           helm repo update
           touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
+          KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail --install
