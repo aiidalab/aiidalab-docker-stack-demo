@@ -79,7 +79,7 @@ jobs:
       RELEASE: aiidalab-ccmx2021
       aiidalab_default_apps: >-
         aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@6492c9d8dc2c9061d6c373f9317ae0f9c1433cd8
-        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@v21.08.0b1
+        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@v21.08.0b2
       aiidalab_factory_reset: ""
       contact_email: simon.adorf@epfl.ch
       https_enabled: true
