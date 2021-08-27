@@ -65,6 +65,9 @@ hub:
       c.JupyterHub.logo_file = "aiidalab-logo.png"
 
 scheduling:
+  userPlaceholder:
+    enabled: true
+    replicas: 1
   userPods:
     nodeAffinity:
       # matchNodePurpose valid options:
