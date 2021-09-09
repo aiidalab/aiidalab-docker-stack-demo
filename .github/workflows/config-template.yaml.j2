@@ -26,7 +26,8 @@ singleuser:
   storage:
     homeMountPath: "/home/aiida"
     dynamic:
-      storageClass: aws-efs
+      storageClass: {{ 'do-block-storage' if RELEASE == 'aiidalab-marketplace' else 'aws-efs' }}
+
   memory:
     limit: 4G
     guarantee: 2G
@@ -36,7 +37,11 @@ singleuser:
   startTimeout: 600
 
 hub:
+{%- if RELEASE != 'aiidalab-marketplace' %}
   config:
+    JupyterHub:
+      authenticator_class: {{ authenticator_class }}
+  {%- if authenticator_class == 'github' %}
     GitHubOAuthenticator:
       client_id: "{{ oauth_client_id }}"
       client_secret: "{{ oauth_client_secret }}"
@@ -50,13 +55,40 @@ hub:
       scope:
         - read:user
         - read:org
-    JupyterHub:
-      authenticator_class: github
+  {%- elif authenticator_class == 'dummy' %}
+    DummyAuthenticator:
+      password: "{{ auth_password }}"
+  {%- endif %}
+{%- endif %}
+
   db:
     pvc:
-      storageClassName: gp2
+      storageClassName: {{ 'do-block-storage' if RELEASE == 'aiidalab-marketplace' else 'gp2' }}
+
   extraConfig:
     myConfig: |
+{%- if RELEASE == 'aiidalab-marketplace' %} 
+      # The code has no indent, in order to keep the indent as in this template
+      # wrap the include in a macro name it mpoauth(), the pass this macro function 
+      # through the indent filter. 
+      # As described at https://stackoverflow.com/questions/10821539/jinja-keep-indentation-on-include-or-macro
+      {% macro mpoauth() %}{% include "./marketplace/oauthenticator.py" %}{% endmacro %}
+      {{ mpoauth()|indent(6) }}
+
+      c.JupyterHub.authenticator_class = MarketplaceOAuthenticator
+      c.JupyterHub.admin_access = True
+
+      c.MarketplaceOAuthenticator.client_id = "{{ oauth_client_id }}"
+      c.MarketplaceOAuthenticator.client_secret = "{{ oauth_client_secret }}"
+      c.MarketplaceOAuthenticator.oauth_callback_url = 'https://{{ jh_host }}/hub/oauth_callback'
+
+      c.MarketplaceOAuthenticator.userdata_url = "https://{{ marketplace_host }}/user-service/userinfo"
+      c.MarketplaceOAuthenticator.token_url = "https://{{ marketplace_host }}/oauth/oauth2/token"
+      c.MarketplaceOAuthenticator.authorize_url = "https://{{ marketplace_host }}/oauth/oauth2/auth"
+      c.MarketplaceOAuthenticator.scope = {{ oauth_scope }}
+      c.MarketplaceOAuthenticator.admin_users = {{ admin_users }}
+{%- endif %}
+
       c.KubeSpawner.http_timeout = 600
       # phusion init system needs to run as root
       c.KubeSpawner.uid = 0
@@ -79,7 +111,7 @@ scheduling:
       # - ignore
       # - prefer (the default)
       # - require
-      matchNodePurpose: require
+      matchNodePurpose: {{ 'prefer' if RELEASE == 'aiidalab-marketplace' else 'require' }}
 
 # removing inactive pods (=no response from the user's browser).
 cull:
