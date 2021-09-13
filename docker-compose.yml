@@ -5,10 +5,6 @@ services:
     ports:
       - ${AIIDALAB_PORT}:8888
     environment:
-      - >
-        AIIDALAB_DEFAULT_APPS=
-        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@stable
-        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@stable
       - JUPYTER_TOKEN
     volumes:
       - ~/aiidalab:/home/aiida
