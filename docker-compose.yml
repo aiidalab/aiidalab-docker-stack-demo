@@ -12,3 +12,8 @@ services:
       - JUPYTER_TOKEN
     volumes:
       - ~/aiidalab:/home/aiida
+    secrets:
+      - ssh_key
+secrets:
+  ssh_key:
+    file: ~/.ssh/id_rsa
