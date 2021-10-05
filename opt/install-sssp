@@ -1,0 +1,60 @@
+#!/opt/conda/bin/python
+from pathlib import Path
+from time import sleep
+from subprocess import run
+import logging
+
+from aiida import load_profile
+from aiida.orm import QueryBuilder
+from aiida_pseudo.groups.family import PseudoPotentialFamily
+from filelock import FileLock, Timeout
+
+
+EXPECTED_PSEUDOS = {
+    "SSSP/1.1/PBE/efficiency",
+    "SSSP/1.1/PBE/precision",
+    "SSSP/1.1/PBEsol/efficiency",
+    "SSSP/1.1/PBEsol/precision",
+}
+
+FN_LOCKFILE = Path.home().joinpath(".install-sssp.lock")
+
+load_profile()
+
+
+def log(msg):
+    print(f"AiiDA-SSSP-installation: {msg}")
+
+
+def pseudos_are_installed():
+    qb = QueryBuilder()
+    qb.append(PseudoPotentialFamily, filters={"label": {"like": "SSSP/%"}})
+    labels = {group.label for group, in qb.iterall()}
+    return labels == EXPECTED_PSEUDOS
+
+
+def install_pseudos():
+    run(["aiida-pseudo", "install", "sssp", "-x", "PBE", "-p", "efficiency"])
+    run(["aiida-pseudo", "install", "sssp", "-x", "PBE", "-p", "precision"])
+    run(["aiida-pseudo", "install", "sssp", "-x", "PBEsol", "-p", "efficiency"])
+    run(["aiida-pseudo", "install", "sssp", "-x", "PBEsol", "-p", "precision"])
+
+
+def main():
+    lock = FileLock(FN_LOCKFILE, timeout=0)
+    log("Trying to install SSSP pseudo potential families...")
+    try:
+        with lock:
+            log("Obtained lock.")
+            if pseudos_are_installed():
+                log("Already installed, exiting.")
+            else:
+                log("Installing...")
+                install_pseudos()
+                log("Done.")
+    except Timeout:
+        log("Failed to obtain lock, installation likely already in progress, exiting.")
+
+
+if __name__ == "__main__":
+    main()

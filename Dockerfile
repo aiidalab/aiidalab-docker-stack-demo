@@ -16,7 +16,7 @@ RUN pip install -r requirements.txt
 RUN reentry scan
 
 # Prepare user's folders for AiiDAlab launch.
-COPY opt/setup_optional_things.sh /opt/
-COPY my_init.d/setup_optional_things.sh /etc/my_init.d/90_setup_optional_things.sh
+COPY opt/* /opt/
+COPY my_init.d/prepare_environment.sh /etc/my_init.d/90_prepare_environment.sh
 
 CMD ["/sbin/my_my_init"]
