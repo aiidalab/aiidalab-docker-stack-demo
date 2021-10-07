@@ -1,4 +1,4 @@
-FROM aiidalab/aiidalab-docker-stack:21.10.1
+FROM aiidalab/aiidalab-docker-stack:latest
 
 USER root
 
