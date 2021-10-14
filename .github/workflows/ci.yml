@@ -85,6 +85,8 @@ jobs:
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
       jh_host: demo-develop.aiidalab.net
+
+      authenticator_class: github
       oauth_client_id: "ec9145436c332e45df0a"
       oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
       secret_token: ${{ secrets.SECRET_TOKEN }}
@@ -145,6 +147,8 @@ jobs:
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
       jh_host: demo-staging.aiidalab.net
+
+      authenticator_class: github
       oauth_client_id: "f6f08b8a35ebf3e5e52c"
       oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
       secret_token: ${{ secrets.SECRET_TOKEN }}
@@ -182,3 +186,65 @@ jobs:
           helm repo update
           touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
           KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
+
+
+  deploy-marketplace:
+
+    needs: [build-docker-image]
+    if: github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: marketplace
+      url: https://materials-marketplace.aiidalab.net/
+    env:
+      NAMESPACE: default
+      RELEASE: aiidalab-marketplace
+      aiidalab_default_apps: >-
+        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@stable
+        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@stable
+      aiidalab_factory_reset: ""
+      contact_email: simon.adorf@epfl.ch
+      https_enabled: true
+      image_name: ${{ github.repository }}
+      image_tag: ${{ needs.build-docker-image.outputs.tag }}
+      jh_host: materials-marketplace.aiidalab.net
+
+      marketplace_host: staging.the-marketplace.eu
+      oauth_client_id: "04366497-2d3f-4cc4-8c1a-b6a4a7fa68b7" 
+      oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
+      secret_token: ${{ secrets.SECRET_TOKEN }}
+      oauth_scope: "['email', 'profile', 'openid', 'offline']"
+      admin_users: "['jusong yu', 'simon epfl']"
+
+    steps:
+      -
+        uses: actions/checkout@v2
+      -
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      -
+        name: Install Python requirements
+        run: |
+          pip install \
+            j2cli[yaml] \
+            ruamel.yaml
+          pip freeze
+      -
+        name: Configure deployment
+        run: |
+          j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
+      -
+        name: Deploy with Helm
+        run: |
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+          helm repo update
+          touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+          KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}"  \
+            jupyterhub/jupyterhub \
+            --version=0.11.1 \
+            --values config.yaml \
+            --cleanup-on-fail \
+            --install
