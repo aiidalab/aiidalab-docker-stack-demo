@@ -59,6 +59,10 @@ hub:
     DummyAuthenticator:
       password: "{{ auth_password }}"
   {%- endif %}
+
+{%- else %} # marketplace
+  extraEnv:
+    JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }}
 {%- endif %}
 
   db:
@@ -78,6 +82,7 @@ hub:
       c.JupyterHub.authenticator_class = MarketplaceOAuthenticator
       c.JupyterHub.admin_access = True
 
+      c.MarketplaceOAuthenticator.enable_auth_state = True
       c.MarketplaceOAuthenticator.client_id = "{{ oauth_client_id }}"
       c.MarketplaceOAuthenticator.client_secret = "{{ oauth_client_secret }}"
       c.MarketplaceOAuthenticator.oauth_callback_url = 'https://{{ jh_host }}/hub/oauth_callback'
