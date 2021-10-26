@@ -7,8 +7,8 @@ services:
     environment:
       - >
         AIIDALAB_DEFAULT_APPS=
-        aiidalab-widgets-base@https://github.com/aiidalab/aiidalab-widgets-base@stable
-        quantum-espresso@https://github.com/aiidalab/aiidalab-qe@stable
+        aiidalab-widgets-base
+        quantum-espresso
       - JUPYTER_TOKEN
     volumes:
       - ~/aiidalab:/home/aiida
