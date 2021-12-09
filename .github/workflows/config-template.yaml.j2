@@ -81,6 +81,12 @@ hub:
 
       c.JupyterHub.authenticator_class = MarketplaceOAuthenticator
       c.JupyterHub.admin_access = True
+      c.JupyterHub.extra_handlers = [
+        (
+          r'/termsAndConditions',
+          TermsConditionsHandler,
+        ),
+      ]
 
       c.MarketplaceOAuthenticator.enable_auth_state = True
       c.MarketplaceOAuthenticator.client_id = "{{ oauth_client_id }}"

@@ -6,22 +6,14 @@ from tornado.httpclient import HTTPRequest, AsyncHTTPClient
 from jupyterhub.handlers.base import BaseHandler
 
 # add route for terms & conditions
-class HeartbeatHandler(BaseHandler):
+class TermsConditionsHandler(BaseHandler):
 
     def get(self): # pylint: disable=arguments-differ
-        """heartbeat"""
-        self.write("exist is pain.")
+        """Terms and conditions"""
+        self.write("This is the terms and conditions of this service.")
 
         return
     
-class LoginHandler(BaseHandler):
-
-    def get(self): # pylint: disable=arguments-differ
-        """heartbeat"""
-        self.write("login by me.")
-
-        return
-
 class MarketplaceOAuthenticator(GenericOAuthenticator):
     """A GenericOAuthenticator with assigned LoginHandler containing Marketplace specific urls"""
 
