@@ -10,9 +10,9 @@ class TermsConditionsHandler(BaseHandler):
 
     def get(self): # pylint: disable=arguments-differ
         """Terms and conditions"""
+        # Note: This placeholder serves a demonstration for adding
+        # additional routes and associated handlers.
         self.write("This is the terms and conditions of this service.")
-
-        return
     
 class MarketplaceOAuthenticator(GenericOAuthenticator):
     """A GenericOAuthenticator with assigned LoginHandler containing Marketplace specific urls"""

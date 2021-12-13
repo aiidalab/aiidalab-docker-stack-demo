@@ -37,7 +37,10 @@ singleuser:
   startTimeout: 600
 
 hub:
-{%- if RELEASE != 'aiidalab-marketplace' %}
+{%- if RELEASE == 'aiidalab-marketplace' %}
+  extraEnv:
+    JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }}
+{%- else %}
   config:
     JupyterHub:
       authenticator_class: {{ authenticator_class }}
@@ -59,10 +62,6 @@ hub:
     DummyAuthenticator:
       password: "{{ auth_password }}"
   {%- endif %}
-
-{%- else %} # marketplace
-  extraEnv:
-    JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }}
 {%- endif %}
 
   db:
