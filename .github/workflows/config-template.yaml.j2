@@ -37,7 +37,10 @@ singleuser:
   startTimeout: 600
 
 hub:
-{%- if RELEASE != 'aiidalab-marketplace' %}
+{%- if RELEASE == 'aiidalab-marketplace' %}
+  extraEnv:
+    JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }}
+{%- else %}
   config:
     JupyterHub:
       authenticator_class: {{ authenticator_class }}
@@ -77,7 +80,14 @@ hub:
 
       c.JupyterHub.authenticator_class = MarketplaceOAuthenticator
       c.JupyterHub.admin_access = True
+      c.JupyterHub.extra_handlers = [
+        (
+          r'/termsAndConditions',
+          TermsConditionsHandler,
+        ),
+      ]
 
+      c.MarketplaceOAuthenticator.enable_auth_state = True
       c.MarketplaceOAuthenticator.client_id = "{{ oauth_client_id }}"
       c.MarketplaceOAuthenticator.client_secret = "{{ oauth_client_secret }}"
       c.MarketplaceOAuthenticator.oauth_callback_url = 'https://{{ jh_host }}/hub/oauth_callback'
