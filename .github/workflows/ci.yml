@@ -7,6 +7,7 @@ on:
     branches:
       - develop
       - main
+      - marketplace
 
 jobs:
 
@@ -210,9 +211,10 @@ jobs:
       image_name: ${{ github.repository }}
       image_tag: ${{ needs.build-docker-image.outputs.tag }}
       jh_host: materials-marketplace.aiidalab.net
+      jh_crypt_key: ${{ secrets.JUPYTERHUB_CRYPT_KEY }}
 
       marketplace_host: staging.the-marketplace.eu
-      oauth_client_id: "04366497-2d3f-4cc4-8c1a-b6a4a7fa68b7" 
+      oauth_client_id: "2c7c68ab-84b3-45e6-b3d8-fe87f64937e3" 
       oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
       secret_token: ${{ secrets.SECRET_TOKEN }}
       oauth_scope: "['email', 'profile', 'openid', 'offline']"
