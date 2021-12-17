@@ -60,5 +60,6 @@ class MarketplaceOAuthenticator(GenericOAuthenticator):
         if not auth_state:
             # auth_state not enabled
             return
+        spawner.environment['MP_HOST'] = "https://{{ marketplace_host }}"
         spawner.environment['MP_ACCESS_TOKEN'] = auth_state['access_token']
         spawner.environment['MP_REFRESH_TOKEN'] = auth_state['refresh_token']
