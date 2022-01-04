@@ -90,6 +90,8 @@ hub:
       c.MarketplaceOAuthenticator.enable_auth_state = True
       c.MarketplaceOAuthenticator.client_id = "{{ oauth_client_id }}"
       c.MarketplaceOAuthenticator.client_secret = "{{ oauth_client_secret }}"
+      c.MarketplaceOAuthenticator.client_id_qe = "{{ oauth_client_id }}"
+      c.MarketplaceOAuthenticator.client_secret_qe = "{{ oauth_client_secret }}"
       c.MarketplaceOAuthenticator.oauth_callback_url = 'https://{{ jh_host }}/hub/oauth_callback'
 
       c.MarketplaceOAuthenticator.userdata_url = "https://{{ marketplace_host }}/user-service/userinfo"

@@ -1,5 +1,8 @@
 import json
+import base64
 from typing import Tuple
+from urllib.parse import urlencode
+
 from oauthenticator.generic import GenericOAuthenticator
 
 from tornado.httpclient import HTTPRequest, AsyncHTTPClient
@@ -7,7 +10,7 @@ from tornado.httputil import url_concat
 
 from jupyterhub.handlers.base import BaseHandler
 
-from urllib.parse import urlencode
+from traitlets import Unicode
 
 # add route for terms & conditions
 class TermsConditionsHandler(BaseHandler):
@@ -20,6 +23,8 @@ class TermsConditionsHandler(BaseHandler):
     
 class MarketplaceOAuthenticator(GenericOAuthenticator):
     """A GenericOAuthenticator with assigned LoginHandler containing Marketplace specific urls"""
+    client_id_qe = Unicode(config=True)
+    client_secret_qe = Unicode(config=True)
 
     async def _fetch_user_details(self, access_token):
         """Get user details from Marketplace user-service API from user ID"""
@@ -55,7 +60,18 @@ class MarketplaceOAuthenticator(GenericOAuthenticator):
         )
         params.update(self.extra_params)
 
-        headers = self._get_headers()
+        headers = {"Accept": "application/json", "User-Agent": "JupyterHub"}
+        
+        qe = True
+        if qe:
+            self.client_id = self.client_id_qe
+            self.client_secret = self.client_secret_qe
+
+        if self.basic_auth:
+            b64key = base64.b64encode(
+                bytes("{}:{}".format(self.client_id, self.client_secret), "utf8")
+            )
+            headers.update({"Authorization": "Basic {}".format(b64key.decode("utf8"))})
         
         req = HTTPRequest(
             self.token_url,
