@@ -1,9 +1,13 @@
+import json
 from typing import Tuple
 from oauthenticator.generic import GenericOAuthenticator
 
 from tornado.httpclient import HTTPRequest, AsyncHTTPClient
+from tornado.httputil import url_concat
 
 from jupyterhub.handlers.base import BaseHandler
+
+from urllib.parse import urlencode
 
 # add route for terms & conditions
 class TermsConditionsHandler(BaseHandler):
@@ -19,8 +23,6 @@ class MarketplaceOAuthenticator(GenericOAuthenticator):
 
     async def _fetch_user_details(self, access_token):
         """Get user details from Marketplace user-service API from user ID"""
-        import json
-
         http_client = AsyncHTTPClient()
         headers = {
             "Accept": "application/json",
@@ -42,17 +44,104 @@ class MarketplaceOAuthenticator(GenericOAuthenticator):
 
     async def authenticate(self, handler, data=None):
         """Overloads authentication service to include an additional call to marketplace user-service API."""
-        resp_json = await super().authenticate(handler, data=data)
+
+        http_client = AsyncHTTPClient()
+        code = handler.get_argument("code")
+
+        params = dict(
+            redirect_uri=self.get_callback_url(handler),
+            code=code,
+            grant_type='authorization_code',
+        )
+        params.update(self.extra_params)
+
+        headers = self._get_headers()
+        
+        req = HTTPRequest(
+            self.token_url,
+            method="POST",
+            headers=headers,
+            body=urlencode(params),
+        )
+        token_resp = await http_client.fetch(req)
+        token_resp_json = json.loads(token_resp.body.decode('utf8', 'replace'))
+
+        access_token = token_resp_json['access_token']
+        token_type = token_resp_json['token_type']
+
+        # Determine who the logged in user is
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": "JupyterHub",
+            "Authorization": "{} {}".format(token_type, access_token),
+        }
+        if self.userdata_url:
+            url = url_concat(self.userdata_url, self.userdata_params)
+        else:
+            raise ValueError("Please set the OAUTH2_USERDATA_URL environment variable")
+
+        if self.userdata_token_method == "url":
+            url = url_concat(self.userdata_url, dict(access_token=access_token))
+
+        req = HTTPRequest(url, headers=headers)
+        
+        http_client = AsyncHTTPClient()
+        user_data_resp = await http_client.fetch(req)
+        user_data_resp_json = json.loads(user_data_resp.body.decode('utf8', 'replace'))
+
+        if callable(self.username_key):
+            name = self.username_key(user_data_resp_json)
+        else:
+            name = user_data_resp_json.get(self.username_key)
+            if not name:
+                self.log.error(
+                    "OAuth user contains no key %s: %s",
+                    self.username_key,
+                    user_data_resp_json,
+                )
+                return
+
+        user_info = {
+            'name': name,
+            'auth_state': self._create_auth_state(token_resp_json, user_data_resp_json),
+        }
+
+        # if self.allowed_groups:
+        #     self.log.info(
+        #         'Validating if user claim groups match any of {}'.format(
+        #             self.allowed_groups
+        #         )
+        #     )
+
+        #     if callable(self.claim_groups_key):
+        #         groups = self.claim_groups_key(user_data_resp_json)
+        #     else:
+        #         groups = user_data_resp_json.get(self.claim_groups_key)
+
+        #     if not groups:
+        #         self.log.error(
+        #             "No claim groups found for user! Something wrong with the `claim_groups_key` {}? {}".format(
+        #                 self.claim_groups_key, user_data_resp_json
+        #             )
+        #         )
+        #         groups = []
+
+        #     if self.check_user_in_groups(groups, self.allowed_groups):
+        #         user_info['admin'] = self.check_user_in_groups(
+        #             groups, self.admin_groups
+        #         )
+        #     else:
+        #         user_info = None
 
         # Get full user details
-        access_token = resp_json['auth_state']['access_token']
+        access_token = user_info['auth_state']['access_token']
         user_json = await self._fetch_user_details(access_token)
 
         # Update real username and store additional details in in auth_state
-        resp_json['name'] = user_json['name']
-        resp_json['auth_state']['oauth_user'].update(user_json)
+        user_info['name'] = user_json['name']
+        user_info['auth_state']['oauth_user'].update(user_json)
 
-        return resp_json
+        return user_info
 
     async def pre_spawn_start(self, user, spawner):
         """Pass upstream_token to spawner via environment variable"""
