@@ -70,10 +70,10 @@ hub:
 
   extraConfig:
     myConfig: |
-{%- if RELEASE == 'aiidalab-marketplace' %} 
+{%- if RELEASE == 'aiidalab-marketplace' %}
       # The code has no indent, in order to keep the indent as in this template
-      # wrap the include in a macro name it mpoauth(), the pass this macro function 
-      # through the indent filter. 
+      # wrap the include in a macro name it mpoauth(), the pass this macro function
+      # through the indent filter.
       # As described at https://stackoverflow.com/questions/10821539/jinja-keep-indentation-on-include-or-macro
       {% macro mpoauth() %}{% include "./marketplace/oauthenticator.py" %}{% endmacro %}
       {{ mpoauth()|indent(6) }}
