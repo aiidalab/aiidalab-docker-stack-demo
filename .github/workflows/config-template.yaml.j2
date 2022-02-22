@@ -92,9 +92,10 @@ hub:
       c.MarketplaceOAuthenticator.client_secret = "{{ oauth_client_secret }}"
       c.MarketplaceOAuthenticator.oauth_callback_url = 'https://{{ jh_host }}/hub/oauth_callback'
 
-      c.MarketplaceOAuthenticator.userdata_url = "https://{{ marketplace_host }}/user-service/userinfo"
-      c.MarketplaceOAuthenticator.token_url = "https://{{ marketplace_host }}/oauth/oauth2/token"
-      c.MarketplaceOAuthenticator.authorize_url = "https://{{ marketplace_host }}/oauth/oauth2/auth"
+      c.MarketplaceOAuthenticator.userdata_url = "https://{{ marketplace_host }}/auth/realms/marketplace/protocol/openid-connect/userinfo"
+      c.MarketplaceOAuthenticator.username_key = "preferred_username"
+      c.MarketplaceOAuthenticator.token_url = "https://{{ marketplace_host }}/auth/realms/marketplace/protocol/openid-connect/token"
+      c.MarketplaceOAuthenticator.authorize_url = "https://{{ marketplace_host }}/auth/realms/marketplace/protocol/openid-connect/auth"
       c.MarketplaceOAuthenticator.scope = {{ oauth_scope }}
       c.MarketplaceOAuthenticator.admin_users = {{ admin_users }}
 {%- endif %}
