@@ -211,12 +211,12 @@ jobs:
             jh_host: materials-marketplace.aiidalab.net
             jh_crypt_key: ${{ secrets.JUPYTERHUB_CRYPT_KEY }}
 
-            marketplace_host: staging.the-marketplace.eu
-            oauth_client_id: 2c7c68ab-84b3-45e6-b3d8-fe87f64937e3
+            marketplace_host: www.materials-marketplace.eu
+            oauth_client_id: 84e24fcd-3b44-4980-b062-969775b752b9
             oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
             secret_token: ${{ secrets.SECRET_TOKEN }}
-            oauth_scope: "['email', 'profile', 'openid', 'offline']"
-            admin_users: "['jusong yu', 'simon epfl']"
+            oauth_scope: "['email', 'openid', 'profile']"
+            admin_users: "['jusong.yu', 'simon.adorf']"
 
         steps:
             - uses: actions/checkout@v2
