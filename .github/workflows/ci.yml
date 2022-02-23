@@ -8,7 +8,10 @@ on:
         branches:
             - develop
             - main
-            - marketplace
+    pull_request:
+        branches:
+            - develop
+            - main
 
 jobs:
 
