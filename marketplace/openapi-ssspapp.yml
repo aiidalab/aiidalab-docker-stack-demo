@@ -2,26 +2,35 @@
 openapi: 3.0.0
 
 info:
-    title: API description of a Marketplace Application
-    description: OpenAPI Specification of the Application registration API
+    title: AiiDAlab SSSP App
+    description: OpenAPI Specification of the MarketPlace AiiDAlab deployment
     version: 0.1.0
-    x-application-name: AiiDA-lab-SSSPapp
-    x-application-id: 2c7c68ab-84b3-45e6-b3d8-fe87f64937e3
-    x-mp-api: http://marketplace.org/ontology/v1_0_0/api_spec
-    x-external-hostname: https://materials-marketplace.aiidalab.net/
-    x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-widgets-base/master/miscellaneous/logos/aiidalab.png
+    x-application-name: AiiDAlab SSSP App
+    x-oauth-client:
+        client-id:
+        scopes:
+            - email
+            - openid
+            - profile
+        callback: https://materials-marketplace.aiidalab.net/hub/oauth_callback
+    x-external-hostname: https://materials-marketplace.aiidalab.net
+    x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-sssp/main/miscellaneous/logo-sssp.png
+    x-contacts:
+        - jusong.yu@epfl.ch
     x-products:
-        - name: SSSP App
-          productId: 87f0189b-00b7-4ae3-a017-8d85e766d3d5
+        - name: AiiDAlab SSSP app
+          productId:
 servers:
-    - url: https://materials-marketplace.aiidalab.net/
+    - url: https://materials-marketplace.aiidalab.net
 
 paths:
-# Administrative paths
-    /hub/user-redirect/apps/apps/aiidalab-sssp/verification.ipynb:
+
+    /hub/user-redirect/apps/apps/sssp/verification.ipynb:
         get:
-            description: frontend path
+            description: SSSP App
             operationId: frontend
+            security:
+              - bearerAuth: []
             responses:
                 '200':
                     description: Success
@@ -32,6 +41,7 @@ paths:
         get:
             description: To check if an application is alive
             operationId: heartbeat
+            security: []
             responses:
                 '200':
                     description: Success
@@ -39,8 +49,8 @@ paths:
                     description: Not found
 
 components:
-    securitySchemes:
-        AuthHeader:
-            type: apiKey
-            in: header
-            name: Authorization
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

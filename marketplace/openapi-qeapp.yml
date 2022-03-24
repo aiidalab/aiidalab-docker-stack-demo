@@ -2,26 +2,35 @@
 openapi: 3.0.0
 
 info:
-    title: API description of a Marketplace Application
-    description: OpenAPI Specification of the Application registration API
+    title: AiiDAlab QE App
+    description: OpenAPI Specification of the MarketPlace AiiDAlab deployment
     version: 0.1.0
-    x-application-name: AiiDA-lab-QEapp
-    x-application-id: 2c7c68ab-84b3-45e6-b3d8-fe87f64937e3
-    x-mp-api: http://marketplace.org/ontology/v1_0_0/api_spec
-    x-external-hostname: https://materials-marketplace.aiidalab.net/
-    x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-widgets-base/master/miscellaneous/logos/aiidalab.png
+    x-application-name: AiiDAlab QE App
+    x-oauth-client:
+        client-id:
+        scopes:
+            - email
+            - openid
+            - profile
+        callback: https://materials-marketplace.aiidalab.net/hub/oauth_callback
+    x-external-hostname: https://materials-marketplace.aiidalab.net
+    x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-qe/v20.12.0/miscellaneous/logos/QE.jpg
+    x-contacts:
+        - simon.adorf@epfl.ch
     x-products:
-        - name: QE App
-          productId: 87f0189b-00b7-4ae3-a017-8d85e766d3d5
+        - name: AiiDAlab QE app
+          productId:
 servers:
-    - url: https://materials-marketplace.aiidalab.net/
+    - url: https://materials-marketplace.aiidalab.net
 
 paths:
-# Administrative paths
+
     /hub/user-redirect/apps/apps/quantum-espresso/qe.ipynb:
         get:
-            description: frontend path
+            description: QE App
             operationId: frontend
+            security:
+              - bearerAuth: []
             responses:
                 '200':
                     description: Success
@@ -32,6 +41,7 @@ paths:
         get:
             description: To check if an application is alive
             operationId: heartbeat
+            security: []
             responses:
                 '200':
                     description: Success
@@ -39,8 +49,8 @@ paths:
                     description: Not found
 
 components:
-    securitySchemes:
-        AuthHeader:
-            type: apiKey
-            in: header
-            name: Authorization
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
