@@ -203,6 +203,7 @@ jobs:
             aiidalab_default_apps: >-
                 aiidalab-widgets-base@git+https://github.com/aiidalab/aiidalab-widgets-base@stable
                 quantum-espresso@git+https://github.com/aiidalab/aiidalab-qe@stable
+                sssp@git+https://github.com/aiidalab/aiidalab-sssp@main
             aiidalab_factory_reset: ''
             contact_email: simon.adorf@epfl.ch
             https_enabled: true
