@@ -211,8 +211,8 @@ jobs:
             jh_host: materials-marketplace.aiidalab.net
             jh_crypt_key: ${{ secrets.JUPYTERHUB_CRYPT_KEY }}
 
-            marketplace_host: www.materials-marketplace.eu
-            oauth_client_id: 84e24fcd-3b44-4980-b062-969775b752b9
+            marketplace_host: staging.materials-marketplace.eu
+            oauth_client_id: ${{ secrets.OAUTH_CLIENT_ID }}
             oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
             secret_token: ${{ secrets.SECRET_TOKEN }}
             oauth_scope: "['email', 'openid', 'profile']"
