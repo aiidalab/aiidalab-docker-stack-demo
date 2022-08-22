@@ -74,118 +74,117 @@ jobs:
             - name: Image digest
               run: echo ${{ steps.docker_build.outputs.digest }}
 
-    deploy-demo-develop:
+    # deploy-demo-develop:
 
-        needs: [build-docker-image]
-        if: github.ref == 'refs/heads/develop'
+    #     needs: [build-docker-image]
+    #     if: github.ref == 'refs/heads/develop'
 
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-        environment:
-            name: demo-develop
-            url: https://demo-develop.aiidalab.net
-        env:
-            NAMESPACE: default
-            RELEASE: aiidalab-demo-develop
-            aiidalab_default_apps: >-
-                aiidalab-widgets-base@git+https://github.com/aiidalab/aiidalab-widgets-base@develop
-                quantum-espresso@git+https://github.com/aiidalab/aiidalab-qe@master
-            aiidalab_factory_reset: ''
-            contact_email: simon.adorf@epfl.ch
-            https_enabled: true
-            image_name: ${{ github.repository }}
-            image_tag: ${{ needs.build-docker-image.outputs.tag }}
-            jh_host: demo-develop.aiidalab.net
+    #     runs-on: ubuntu-latest
+    #     timeout-minutes: 10
+    #     environment:
+    #         name: demo-develop
+    #         url: https://demo-develop.aiidalab.net
+    #     env:
+    #         NAMESPACE: default
+    #         RELEASE: aiidalab-demo-develop
+    #         aiidalab_default_apps: >-
+    #             aiidalab-widgets-base@git+https://github.com/aiidalab/aiidalab-widgets-base@develop
+    #             quantum-espresso@git+https://github.com/aiidalab/aiidalab-qe@master
+    #         aiidalab_factory_reset: ''
+    #         contact_email: simon.adorf@epfl.ch
+    #         https_enabled: true
+    #         image_name: ${{ github.repository }}
+    #         image_tag: ${{ needs.build-docker-image.outputs.tag }}
+    #         jh_host: demo-develop.aiidalab.net
 
-            authenticator_class: github
-            oauth_client_id: ec9145436c332e45df0a
-            oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
-            secret_token: ${{ secrets.SECRET_TOKEN }}
+    #         authenticator_class: github
+    #         oauth_client_id: ec9145436c332e45df0a
+    #         oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
+    #         secret_token: ${{ secrets.SECRET_TOKEN }}
 
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: 3.8
-            - name: Install Python requirements
-              run: |
-                  pip install \
-                    j2cli[yaml] \
-                    ruamel.yaml
-                  pip freeze
-            - name: Configure deployment
-              run: |
-                  j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
+    #     steps:
+    #         - uses: actions/checkout@v2
+    #         - uses: actions/setup-python@v2
+    #           with:
+    #               python-version: 3.8
+    #         - name: Install Python requirements
+    #           run: |
+    #               pip install \
+    #                 j2cli[yaml] \
+    #                 ruamel.yaml
+    #               pip freeze
+    #         - name: Configure deployment
+    #           run: |
+    #               j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: eu-north-1
-            - name: Deploy with Helm
-              run: |
-                  helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
-                  helm repo update
-                  touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-                  KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
+    #         - name: Configure AWS credentials
+    #           uses: aws-actions/configure-aws-credentials@v1
+    #           with:
+    #               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #               aws-region: eu-north-1
+    #         - name: Deploy with Helm
+    #           run: |
+    #               helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+    #               helm repo update
+    #               touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+    #               KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
 
-    deploy-demo-staging:
+    # deploy-demo-staging:
 
-        needs: [build-docker-image]
-        if: github.ref == 'refs/heads/main'
+    #     needs: [build-docker-image]
+    #     if: github.ref == 'refs/heads/main'
 
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-        environment:
-            name: demo-staging
-            url: https://demo-staging.aiidalab.net
-        env:
-            NAMESPACE: staging
-            RELEASE: aiidalab-demo-staging
-            aiidalab_default_apps: >-
-                aiidalab-widgets-base
-                quantum-espresso
-            aiidalab_factory_reset: ''
-            contact_email: simon.adorf@epfl.ch
-            https_enabled: true
-            image_name: ${{ github.repository }}
-            image_tag: ${{ needs.build-docker-image.outputs.tag }}
-            jh_host: demo-staging.aiidalab.net
+    #     runs-on: ubuntu-latest
+    #     timeout-minutes: 10
+    #     environment:
+    #         name: demo-staging
+    #         url: https://demo-staging.aiidalab.net
+    #     env:
+    #         NAMESPACE: staging
+    #         RELEASE: aiidalab-demo-staging
+    #         aiidalab_default_apps: >-
+    #             aiidalab-widgets-base
+    #             quantum-espresso
+    #         aiidalab_factory_reset: ''
+    #         contact_email: simon.adorf@epfl.ch
+    #         https_enabled: true
+    #         image_name: ${{ github.repository }}
+    #         image_tag: ${{ needs.build-docker-image.outputs.tag }}
+    #         jh_host: demo-staging.aiidalab.net
 
-            authenticator_class: github
-            oauth_client_id: f6f08b8a35ebf3e5e52c
-            oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
-            secret_token: ${{ secrets.SECRET_TOKEN }}
+    #         authenticator_class: github
+    #         oauth_client_id: f6f08b8a35ebf3e5e52c
+    #         oauth_client_secret: ${{ secrets.OAUTH_CLIENT_SECRET }}
+    #         secret_token: ${{ secrets.SECRET_TOKEN }}
 
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: 3.8
-            - name: Install Python requirements
-              run: |
-                  pip install \
-                    j2cli[yaml] \
-                    ruamel.yaml
-                  pip freeze
-            - name: Configure deployment
-              run: |
-                  j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
+    #     steps:
+    #         - uses: actions/checkout@v2
+    #         - uses: actions/setup-python@v2
+    #           with:
+    #               python-version: 3.8
+    #         - name: Install Python requirements
+    #           run: |
+    #               pip install \
+    #                 j2cli[yaml] \
+    #                 ruamel.yaml
+    #               pip freeze
+    #         - name: Configure deployment
+    #           run: |
+    #               j2 .github/workflows/config-template.yaml.j2 -e "" > config.yaml
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: eu-north-1
-            - name: Deploy with Helm
-              run: |
-                  helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
-                  helm repo update
-                  touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-                  KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
-
+    #         - name: Configure AWS credentials
+    #           uses: aws-actions/configure-aws-credentials@v1
+    #           with:
+    #               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #               aws-region: eu-north-1
+    #         - name: Deploy with Helm
+    #           run: |
+    #               helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+    #               helm repo update
+    #               touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
+    #               KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}" jupyterhub/jupyterhub --version=0.11.1 --values config.yaml --cleanup-on-fail
 
     deploy-marketplace:
 
