@@ -18,6 +18,9 @@ info:
     x-products:
         - name: AiiDAlab OSP
           productId:
+    x-contacts:
+        - simon.adorf@epfl.ch
+        - jusong.yu@epfl.ch
 servers:
     - url: https://materials-marketplace.aiidalab.net/
 
@@ -26,6 +29,8 @@ paths:
         get:
             description: frontend path
             operationId: frontend
+            security:
+                - bearerAuth: []
             responses:
                 '200':
                     description: Success
@@ -36,6 +41,8 @@ paths:
         get:
             description: To check if an application is alive
             operationId: heartbeat
+            security:
+                - bearerAuth: []
             responses:
                 '200':
                     description: Success
@@ -44,7 +51,7 @@ paths:
 
 components:
     securitySchemes:
-        AuthHeader:
-            type: apiKey
-            in: header
-            name: Authorization
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
