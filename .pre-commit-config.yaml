@@ -15,6 +15,6 @@ repos:
           - id: yamlfmt
 
     - repo: https://github.com/sirosen/check-jsonschema
-      rev: 0.18.1
+      rev: 0.18.3
       hooks:
           - id: check-github-workflows
