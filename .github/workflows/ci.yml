@@ -8,10 +8,12 @@ on:
         branches:
             - develop
             - main
+            - marketplace-dev
     pull_request:
         branches:
             - develop
             - main
+            - marketplace-dev
 
 jobs:
 
@@ -189,7 +191,7 @@ jobs:
     deploy-marketplace:
 
         needs: [build-docker-image]
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/marketplace-dev'
 
         runs-on: ubuntu-latest
         timeout-minutes: 10
