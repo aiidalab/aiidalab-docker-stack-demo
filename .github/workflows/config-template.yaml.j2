@@ -1,23 +1,12 @@
 proxy:
   secretToken: "{{ secret_token }}"
   https:
-    enabled: {{ https_enabled | default(false) }}
+    # enabled: {{ https_enabled | default(false) }}
+    enabled: false
     hosts:
       - "{{ jh_host }}"
     letsencrypt:
       contactEmail: "{{ contact_email }}"
-  traefik:
-    extraInitContainers:
-      # This startup delay can help the k8s container network interface setup
-      # network routing of traffic to the pod, which is essential for the ACME
-      # challenge submitted by Traefik on startup to acquire a TLS certificate.
-      #
-      # Sleeping for 7 seconds has been consistently sufficient to avoid issues
-      # in GKE when this workaround was explored initially for GKE.
-      #
-      - name: startup-delay
-        image: busybox:stable
-        command: ["sh", "-c", "sleep 10"]
 
 singleuser:
   image:
