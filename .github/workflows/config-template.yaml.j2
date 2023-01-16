@@ -4,14 +4,9 @@ proxy:
     enabled: {{ https_enabled | default(false) }}
     hosts:
       - "{{ jh_host }}"
-    {# letsencrypt:
-      contactEmail: "{{ contact_email }}" #}
-    type: manual
-    manual:
-      key: |
-        "{{ https_key }}"
-      cert: |
-        "{{ https_cert }}"
+    type: secret
+    secret:
+      name: mp-tls
 
 singleuser:
   image:
