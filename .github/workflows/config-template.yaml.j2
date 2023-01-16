@@ -40,7 +40,9 @@ singleuser:
 hub:
 {%- if RELEASE == 'aiidalab-marketplace' %}
   extraEnv:
-    JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }}
+    {# JUPYTERHUB_CRYPT_KEY: {{ jh_crypt_key }} #}
+    DummyAuthenticator:
+      password: "aaa"
 {%- else %}
   config:
     JupyterHub:
@@ -71,7 +73,7 @@ hub:
 
   extraConfig:
     myConfig: |
-{%- if RELEASE == 'aiidalab-marketplace' %}
+{# {%- if RELEASE == 'aiidalab-marketplace' %}
       # The code has no indent, in order to keep the indent as in this template
       # wrap the include in a macro name it mpoauth(), the pass this macro function
       # through the indent filter.
@@ -99,7 +101,7 @@ hub:
       c.MarketplaceOAuthenticator.authorize_url = "https://{{ marketplace_host }}/auth/realms/marketplace/protocol/openid-connect/auth"
       c.MarketplaceOAuthenticator.scope = {{ oauth_scope }}
       c.MarketplaceOAuthenticator.admin_users = {{ admin_users }}
-{%- endif %}
+{%- endif %} #}
 
       c.KubeSpawner.http_timeout = 600
       # phusion init system needs to run as root
