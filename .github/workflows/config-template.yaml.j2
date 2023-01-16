@@ -8,8 +8,10 @@ proxy:
       contactEmail: "{{ contact_email }}" #}
     type: manual
     manual:
-      key: "{{ https_key }}"
-      cert: "{{ https_cert }}"
+      key: |
+        "{{ https_key }}"
+      cert: |
+        "{{ https_cert }}"
 
 singleuser:
   image:
