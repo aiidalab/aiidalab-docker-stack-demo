@@ -207,7 +207,7 @@ jobs:
                 sssp@git+https://github.com/aiidalab/aiidalab-sssp@main
             aiidalab_factory_reset: ''
             contact_email: jusong.yu@epfl.ch
-            https_enabled: false
+            https_enabled: true
             https_key: ${{ secrets.HTTPS_KEY }}
             https_cert: ${{ secrets.HTTPS_CERT }}
             image_name: ${{ github.repository }}
