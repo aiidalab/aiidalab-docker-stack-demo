@@ -207,7 +207,7 @@ jobs:
                 sssp@git+https://github.com/aiidalab/aiidalab-sssp@main
             aiidalab_factory_reset: ''
             contact_email: jusong.yu@epfl.ch
-            https_enabled: true
+            https_enabled: false
             image_name: ${{ github.repository }}
             image_tag: ${{ needs.build-docker-image.outputs.tag }}
             jh_host: materials-marketplace.aiidalab.net
@@ -241,7 +241,7 @@ jobs:
                   touch kubeconfig && chmod 600 kubeconfig && echo "${{ secrets.KUBECONFIG }}" > kubeconfig
                   KUBECONFIG="kubeconfig" helm --namespace="${NAMESPACE}" upgrade "${RELEASE}"  \
                     jupyterhub/jupyterhub \
-                    --version=1.2.0 \
+                    --version=1.1.4 \
                     --values config.yaml \
                     --cleanup-on-fail \
                     --install
