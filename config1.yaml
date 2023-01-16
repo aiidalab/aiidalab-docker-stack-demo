@@ -87,7 +87,7 @@ debug:
 singleuser:
     image:
         name: aiidalab/aiidalab-docker-stack-demo
-        tag: latest
+        tag: sha-8fe7676
         pullPolicy: Always
     fsGid: 1000
     cmd: /sbin/my_my_init
