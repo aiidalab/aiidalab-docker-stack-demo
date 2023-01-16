@@ -206,7 +206,7 @@ jobs:
                 quantum-espresso@git+https://github.com/aiidalab/aiidalab-qe@stable
                 sssp@git+https://github.com/aiidalab/aiidalab-sssp@main
             aiidalab_factory_reset: ''
-            contact_email: simon.adorf@epfl.ch
+            contact_email: jusong.yu@epfl.ch
             https_enabled: true
             image_name: ${{ github.repository }}
             image_tag: ${{ needs.build-docker-image.outputs.tag }}
