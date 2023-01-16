@@ -1,8 +1,8 @@
 proxy:
   secretToken: "{{ secret_token }}"
   https:
-    enabled: {{ https_enabled | default(false) }}
-    # enabled: false
+    # enabled: {{ https_enabled | default(false) }}
+    enabled: false
     hosts:
       - "{{ jh_host }}"
     letsencrypt:
