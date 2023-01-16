@@ -43,18 +43,9 @@ hub:
       authenticator_class: {{ authenticator_class }}
   {%- if authenticator_class == 'github' %}
     GitHubOAuthenticator:
-      client_id: "{{ oauth_client_id }}"
-      client_secret: "{{ oauth_client_secret }}"
+      client_id: "a0a1962c60a60ead5030"
+      client_secret: "c99e2859ebe9377d9b282a2574f97e1103c93e75"
       oauth_callback_url: "https://{{ jh_host }}/hub/oauth_callback"
-      allowed_organizations:
-        - aiidalab
-        - materialscloud-org
-      admin_users:
-        - csadorf
-        - yakutovicha
-      scope:
-        - read:user
-        - read:org
   {%- elif authenticator_class == 'dummy' %}
     DummyAuthenticator:
       password: "{{ auth_password }}"
