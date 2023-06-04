@@ -2,14 +2,20 @@
 openapi: 3.0.0
 
 info:
-    title: AiiDAlab QE App
-    description: OpenAPI Specification of the MarketPlace AiiDAlab deployment
-    version: 0.2.0
-    x-application-name: AiiDAlab QE App
+    title: AiiDAlab QEApp
+    description: OpenAPI Specification of the MarketPlace AiiDAlab Quantum ESPRESSO deployment
+    version: 0.1.0
+    x-application-name: AiiDAlab QeApp
+    x-oauth-client:
+        client-id:
+        scopes:
+            - email
+            - openid
+            - profile
+        callback: https://materials-marketplace.aiidalab.net/hub/oauth_callback
     x-external-hostname: https://materials-marketplace.aiidalab.net
-    x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-qe/v20.12.0/miscellaneous/logos/QE.jpg
     x-contacts:
-        - simon.adorf@epfl.ch
+        - jusong.yu@psi.ch
     x-products:
         - name: AiiDAlab QE app
           productId:
@@ -18,16 +24,29 @@ servers:
 
 paths:
 
-    ? /user-redirect/apps/apps/home/open_app.ipynb?app=quantum-espresso&redirect=user-redirect/apps/apps/quantum-espresso/qe.ipynb
-    :   description: QE App
-        operationId: frontend
-        security:
-            - bearerAuth: []
-        responses:
-            '200':
-                description: Success
-            '404':
-                description: Page not found
+    
+    /hub/user-redirect/apps/apps/quantum-espresso/qe.ipynb:
+        get:
+            description: QEApp
+            operationId: frontend
+            security:
+                - bearerAuth: []
+            responses:
+                '200':
+                    description: Success
+                '404':
+                    description: Page not found
+
+    /hub/health:
+        get:
+            description: To check if an application is alive
+            operationId: heartbeat
+            security: []
+            responses:
+                '200':
+                    description: Success
+                '404':
+                    description: Not found
 
 components:
     securitySchemes:

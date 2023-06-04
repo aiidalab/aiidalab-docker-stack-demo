@@ -25,7 +25,8 @@ servers:
 
 paths:
 
-    /hub/user-redirect/apps/apps/sssp/verification.ipynb:
+    
+    /hub/user-redirect/apps/apps/home/open_app.ipynb?app=sssp&redirect=user-redirect/apps/apps/sssp/inspect.ipynb:
         get:
             description: SSSP App
             operationId: frontend
