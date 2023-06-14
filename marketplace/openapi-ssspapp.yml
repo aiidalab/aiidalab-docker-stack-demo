@@ -12,8 +12,8 @@ info:
             - email
             - openid
             - profile
-        callback: https://materials-marketplace.aiidalab.net/hub/oauth_callback
-    x-external-hostname: https://materials-marketplace.aiidalab.net
+        callback: https://aiidalab.materials-marketplace.eu/hub/oauth_callback
+    x-external-hostname: https://aiidalab.materials-marketplace.eu
     x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-sssp/main/miscellaneous/logo-sssp.png
     x-contacts:
         - jusong.yu@epfl.ch
@@ -21,7 +21,7 @@ info:
         - name: AiiDAlab SSSP app
           productId:
 servers:
-    - url: https://materials-marketplace.aiidalab.net
+    - url: https://aiidalab.materials-marketplace.eu
 
 paths:
 

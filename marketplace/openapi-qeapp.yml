@@ -12,15 +12,15 @@ info:
             - email
             - openid
             - profile
-        callback: https://materials-marketplace.aiidalab.net/hub/oauth_callback
-    x-external-hostname: https://materials-marketplace.aiidalab.net
+        callback: https://aiidalab.materials-marketplace.eu/hub/oauth_callback
+    x-external-hostname: https://aiidalab.materials-marketplace.eu
     x-contacts:
         - jusong.yu@psi.ch
     x-products:
         - name: AiiDAlab QE app
           productId:
 servers:
-    - url: https://materials-marketplace.aiidalab.net
+    - url: https://aiidalab.materials-marketplace.eu
 
 paths:
 

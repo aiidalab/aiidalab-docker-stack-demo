@@ -2,10 +2,10 @@
 openapi: 3.0.0
 
 info:
-    title: Materials MarketPlace AiiDAlab Deployment API
+    title: AiiDAlab UC3 App
     description: OpenAPI Specification of the MarketPlace AiiDAlab deployment
     version: 0.1.0
-    x-application-name: AiiDAlab
+    x-application-name: AiiDAlab UC3 App
     x-oauth-client:
         client-id:
         scopes:
@@ -15,19 +15,20 @@ info:
         callback: https://aiidalab.materials-marketplace.eu/hub/oauth_callback
     x-external-hostname: https://aiidalab.materials-marketplace.eu
     x-image: https://raw.githubusercontent.com/aiidalab/aiidalab-widgets-base/master/miscellaneous/logos/aiidalab.png
-    x-products:
-        - name: AiiDAlab OSP
-          productId:
     x-contacts:
-        - simon.adorf@epfl.ch
         - jusong.yu@epfl.ch
+    x-products:
+        - name: AiiDAlab UC3 app
+          productId:
 servers:
-    - url: https://aiidalab.materials-marketplace.eu/
+    - url: https://aiidalab.materials-marketplace.eu
 
 paths:
-    /:
+
+    
+    hub/user-redirect/apps/apps/home/open_app.ipynb?app=mp-uc3&redirect=user-redirect/apps/apps/mp-uc3/install_uc3.ipynb:
         get:
-            description: frontend path
+            description: UC3 App
             operationId: frontend
             security:
                 - bearerAuth: []
@@ -41,8 +42,7 @@ paths:
         get:
             description: To check if an application is alive
             operationId: heartbeat
-            security:
-                - bearerAuth: []
+            security: []
             responses:
                 '200':
                     description: Success
