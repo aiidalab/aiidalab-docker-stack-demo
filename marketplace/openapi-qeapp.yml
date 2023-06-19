@@ -24,7 +24,7 @@ servers:
 
 paths:
 
-    
+
     /hub/user-redirect/apps/apps/quantum-espresso/qe.ipynb:
         get:
             description: QEApp

@@ -25,7 +25,7 @@ servers:
 
 paths:
 
-    
+
     hub/user-redirect/apps/apps/home/open_app.ipynb?app=mp-uc3&redirect=user-redirect/apps/apps/mp-uc3/install_uc3.ipynb:
         get:
             description: UC3 App
